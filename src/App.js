@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import firebase from './firebase.js';
+import firebase, {auth, provider} from './firebase.js';
 
 class App extends Component {
   constructor() {
@@ -8,10 +8,13 @@ class App extends Component {
     this.state = {
       currentItem: '',
       username: '',
-      items: []
+      items: [], 
+      user: null 
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.login = this.login.bind(this);
+    this.logout = this.logout.bind(this);
   }
   
   //receives inputs from our inputs and updates the corresponding piece of state
@@ -19,6 +22,24 @@ class App extends Component {
     this.setState({
       [e.target.name]: e.target.value
     });
+  }
+
+  //logout method
+  logout(){
+
+  }
+
+  /*
+  -signInWithPopup will trigger a popup login option to sign in with a Google account
+  */
+  login() {
+    auth.signInWithPopup(provider) 
+      .then((result) => {
+        const user = result.user;
+        this.setState({
+          user
+        });
+      });
   }
 
   //event listener for our form
@@ -82,7 +103,12 @@ class App extends Component {
         <header>
             <div className="wrapper">
               <h1>Fun Food Friends</h1>
-                             
+              {
+                this.state.user?
+                <button onClick={this.logout}>Log Out </button>
+                :
+                <button onClick={this.login}>Login In</button>
+              }               
             </div>
         </header>
         <div className='container'>
