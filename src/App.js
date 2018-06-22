@@ -24,9 +24,14 @@ class App extends Component {
     });
   }
 
-  //logout method
+  //when signout method is called, we remove the user from our app's state
   logout(){
-
+    auth.signOut()
+    .then(() => {
+      this.setState({
+        user:null
+      });
+    });
   }
 
   /*
@@ -63,6 +68,12 @@ class App extends Component {
     });
   }
   componentDidMount() {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        this.setState({ user });
+      } 
+    });    
+    
     /*
     instantiate a new array and populate it with results...
     snapshot: the callback that provides an overview of all the items ref of the database
@@ -111,6 +122,18 @@ class App extends Component {
               }               
             </div>
         </header>
+        {this.state.user ?
+          <div>
+            <div className='user-profile'>
+              <img src={this.state.user.photoURL} />
+            </div>
+          </div>
+          :
+          <div className='wrapper'>
+              <p>You must be logged in to see the potluck list and submit to it.</p>
+          </div>
+      }
+
         <div className='container'>
           <section className='add-item'>
                 <form onSubmit={this.handleSubmit}>
