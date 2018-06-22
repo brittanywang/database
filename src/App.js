@@ -1,13 +1,37 @@
 import React, { Component } from 'react';
 import './App.css';
 import firebase, {auth, provider} from './firebase.js';
+import logo from './logo.png'
+import facebook from './facebook.png'
+import google from './google.png'
+
+const loginStyles = {
+  width: "90%",
+  maxWidth: "315px",
+  margin: "20px auto",
+  border: "2px solid #38abb4",
+  borderRadius: "5px",
+  padding: "20px",
+  background: "white",
+  color: "black"
+}
+
+const loginStylesOuter = {
+  width: "90%",
+  maxWidth: "30%",
+  margin: "20px auto",
+  border: "2px solid white",
+  borderRadius: "5px",
+  padding: "20px",
+  background: "#38abb4",
+}
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
-      currentItem: '',
-      username: '',
+      //currentItem: '',
+      //username: '',
       items: [], 
       user: null 
     }
@@ -110,18 +134,17 @@ class App extends Component {
   }
   render() {
     return (
-      <div className='app'>
-        <header>
-            <div className="wrapper">
-              <h1>Fun Food Friends</h1>
+      <div className='App'>
+            <div className="App-header">
+            <img src={logo} className="App-logo" alt= "logo" />
+              <h1>{this.state.title}</h1>
+            </div>
               {
                 this.state.user?
                 <button onClick={this.logout}>Log Out </button>
                 :
                 <button onClick={this.login}>Login In</button>
-              }               
-            </div>
-        </header>
+              }              
         {this.state.user ?
           <div>
             <div className='user-profile'>
@@ -130,18 +153,25 @@ class App extends Component {
           </div>
           :
           <div className='wrapper'>
-              <p>You must be logged in to see the potluck list and submit to it.</p>
+              <p>You must be logged in to see the group events.</p>
           </div>
       }
 
         <div className='container'>
           <section className='add-item'>
                 <form onSubmit={this.handleSubmit}>
+                {/*this is where we need to modify to math current website
                   <input type="text" name="username" placeholder="What's your name?" onChange={this.handleChange} value={this.state.username} />
                   <input type="text" name="currentItem" placeholder="What are you bringing?" onChange={this.handleChange} value={this.state.currentItem} />
                   <button>Add Item</button>
+                */}
+                <input type="text" name="username" placeholder="Username" />
+                <input type="text" name="currentItem" placeholder="Password" />
+               <button style={{width: "100%"}} type="submit" className="header"> <img src={facebook}  /> Login with Facebook </button>
+              <button style={{width: "100%"}} type="submit" className="header2"> <img src={google} onClick={this.login} /> Login with Google</button>
                 </form>
           </section>
+          {/*}
           <section className='display-item'>
               <div className="wrapper">
                 <ul>
@@ -158,8 +188,10 @@ class App extends Component {
                 </ul>
               </div>
           </section>
+          */}
         </div>
       </div>
+      
     );
   }
 }
