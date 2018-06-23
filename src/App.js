@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import firebase, {auth, provider} from './firebase.js';
+import firebase, {auth, provider, facebookProvider} from './firebase.js';
 import logo from './logo.png'
 import facebook from './facebook.png'
 import google from './google.png'
@@ -39,6 +39,7 @@ class App extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
+    this.fblogin = this.fblogin.bind(this);
   }
   
   //receives inputs from our inputs and updates the corresponding piece of state
@@ -71,6 +72,16 @@ class App extends Component {
       });
   }
 
+  fblogin(){
+    auth.signInWithPopup(facebookProvider)
+    .then((result)=> {
+      const user = result.user;
+      this.setState({
+        user
+      });
+    });
+  }
+
   //event listener for our form
   handleSubmit(e) {
     //prevents the page from refreshing
@@ -78,13 +89,15 @@ class App extends Component {
     //carves out a space on our database where we store the items
     const itemsRef = firebase.database().ref('items');
     //grab the item the user types and packs it into an item object
+    /*
     const item = {
       title: this.state.currentItem,
       user: this.state.username
     }
+   
     //sends a copy of our object so that it could be store in firebase
     itemsRef.push(item);
-
+     */
     //so inputs are cleared after they are added
     this.setState({
       currentItem: '',
@@ -139,12 +152,13 @@ class App extends Component {
             <img src={logo} className="App-logo" alt= "logo" />
               <h1>{this.state.title}</h1>
             </div>
+            {/*}
               {
                 this.state.user?
                 <button onClick={this.logout}>Log Out </button>
                 :
                 <button onClick={this.login}>Login In</button>
-              }              
+              }*/}              
         {this.state.user ?
           <div>
             <div className='user-profile'>
@@ -167,8 +181,16 @@ class App extends Component {
                 */}
                 <input type="text" name="username" placeholder="Username" />
                 <input type="text" name="currentItem" placeholder="Password" />
-               <button style={{width: "100%"}} type="submit" className="header"> <img src={facebook}  /> Login with Facebook </button>
-              <button style={{width: "100%"}} type="submit" className="header2"> <img src={google} onClick={this.login} /> Login with Google</button>
+                {this.state.user?
+               <button style={{width: "100%"}} type="submit" className="header" onClick = {this.logout}> <img src={facebook} onClick = {this.logout} /> Logout of Facebook </button>
+               :
+               <button style={{width: "100%"}} type="submit" className="header" onClick = {this.fblogin}> <img src={facebook} onClick = {this.fblogin} /> Login with Facebook </button>
+                }
+               {this.state.user?
+              <button style={{width: "100%"}} className="header2" onClick = {this.logout}> <img src={google} onClick={this.logout} /> Logout of Google</button>
+                :
+              <button style={{width: "100%"}} className="header2" onClick={this.login}> <img src={google} onClick={this.login} /> Login with Google</button>
+               }
                 </form>
           </section>
           {/*}
